@@ -221,3 +221,18 @@ body {
         height: 150px;
     }
 }
+
+
+
+/* শুধু প্রার্থী কার্ডের ভিতরের জিনিসগুলো সেন্টার ঠিক করা */
+.candidate-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* সবকিছু একদম মাঝখানে */
+}
+
+/* আগে থাকবে যেমন ছিল, শুধু auto মার্জিন দরকার নেই */
+.symbol-circle {
+    margin: 0 0 12px;     /* উপরে-ডানে-বামে সিম্পল, flex আগেই সেন্টার করবে */
+}
+
