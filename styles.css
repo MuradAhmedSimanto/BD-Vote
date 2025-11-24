@@ -5,13 +5,13 @@
     box-sizing: border-box;
 }
 
-/* ---------- BODY & LAYOUT ---------- */
+/* ---------- BODY ---------- */
 body {
-    font-family: "Hind Siliguri", "Noto Sans Bengali", "Poppins", sans-serif;
-    background: #ffffff;              /* পুরো পেজ একদম সাদা */
+    font-family: "Hind Siliguri","Noto Sans Bengali","Poppins",sans-serif;
+    background: #ffffff;
     color: #111827;
     line-height: 1.7;
-    padding-top: 72px;                /* fixed হেডারের নিচে গ্যাপ */
+    padding-top: 72px;
 }
 
 .container {
@@ -20,10 +20,10 @@ body {
     margin: 0 auto;
 }
 
-/* ---------- HEADER (খুব চিকন) ---------- */
+/* ---------- HEADER (thin) ---------- */
 .site-header {
     background: #11b28c;
-    padding: 2px 0;                   /* একেবারে পাতলা হেডার */
+    padding: 2px 0;
     box-shadow: 0 1px 3px rgba(0,0,0,0.15);
     position: fixed;
     top: 0;
@@ -32,20 +32,17 @@ body {
     z-index: 1000;
 }
 
-.site-header .container {
-    text-align: center;
-}
+.site-header .container { text-align: center; }
 
 .site-title {
-    font-size: 20px;                  /* মোবাইলেও সুন্দর দেখাবে */
+    font-size: 20px;
     font-weight: 200;
-    color: #ffffff;
+    color: #fff;
 }
 
 .site-subtitle {
     font-size: 12px;
-    color: #ffffff;
-    margin-top: 0px;
+    color: #fff;
 }
 
 /* ---------- TICKER ---------- */
@@ -72,19 +69,22 @@ body {
 }
 
 @keyframes ticker-scroll {
-    0%   { transform: translateX(0); }
+    0% { transform: translateX(0); }
     100% { transform: translateX(-100%); }
 }
 
-/* ---------- MAIN CARD (ভোট সেকশন) ---------- */
+/* ---------- MAIN VOTE CARD ---------- */
 .form-card {
     background: #ffffff;
     border-radius: 24px;
     border: 1px solid #e5e7eb;
+
+    /* PERFECT CENTER — no left/right extra gap */
+    margin: 20px 10px 36px;     
+    width: calc(100% - 20px);
+
     padding: 24px 20px 26px;
-    margin: 20px auto 36px;
-    max-width: 1150px;
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+    box-shadow: 0 10px 24px rgba(15,23,42,0.06);
 }
 
 .vote-title {
@@ -102,12 +102,11 @@ body {
     margin-bottom: 20px;
 }
 
-/* ---------- CANDIDATE GRID ---------- */
+/* ---------- GRID ---------- */
 .candidate-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
     gap: 18px;
-    margin-bottom: 18px;
 }
 
 /* ---------- CANDIDATE CARD ---------- */
@@ -118,13 +117,18 @@ body {
     padding: 18px 12px 20px;
     text-align: center;
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;    /* PERFECT CENTER */
 }
 
 /* ---------- BIG ROUND MARKA ---------- */
 .symbol-circle {
-    width: 170px;                     /* বড় গোল মার্কা */
+    width: 170px;
     height: 170px;
     margin: 0 auto 12px;
+
     border-radius: 50%;
     border: 3px solid #fbbf24;
     display: flex;
@@ -147,42 +151,36 @@ body {
     color: #111827;
 }
 
-/* ---------- VOTE BUTTON (গাঢ় লাল) ---------- */
+/* ---------- VOTE BUTTON (Dark Red) ---------- */
 .vote-btn {
     padding: 9px 26px;
     border-radius: 999px;
     border: none;
-    background: #dc2626;              /* গাঢ় লাল */
+    background: #dc2626;
     color: #ffffff;
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
     box-shadow: 0 3px 7px rgba(220,38,38,0.35);
-    transition: background 0.12s, transform 0.12s, box-shadow 0.12s;
+    transition: 0.12s;
 }
 
 .vote-btn:hover {
     background: #b91c1c;
     transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(185,28,28,0.45);
 }
 
 .vote-btn.voted {
-    background: #16a34a;             /* ভোট হলে সবুজ */
+    background: #16a34a;
     box-shadow: 0 4px 12px rgba(22,163,74,0.5);
 }
 
 .vote-btn-disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    box-shadow: none;
 }
 
-.vote-btn-disabled:hover {
-    transform: none;
-}
-
-/* ---------- RESULT / FOOTER ---------- */
+/* ---------- RESULT & FOOTER ---------- */
 .vote-result {
     margin-top: 10px;
     font-size: 14px;
@@ -192,9 +190,8 @@ body {
 }
 
 .site-footer {
-    background: transparent;
-    padding: 0 0 24px;
     text-align: center;
+    padding-bottom: 24px;
     font-size: 13px;
     color: #6b7280;
 }
@@ -203,153 +200,15 @@ body {
     margin-top: 6px;
     font-size: 16px;
     font-weight: 700;
-    color: #111827;
 }
 
-/* ---------- FINGERPRINT OVERLAY ---------- */
-.fp-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.45);
-    display: none !important;    /* ডিফল্টে লুকানো */
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.fp-overlay.show {
-    display: flex !important;    /* JS থেকে show হলে দেখা যাবে */
-}
-
-.fp-modal {
-    background: #ffffff;
-    border-radius: 20px;
-    padding: 20px 22px 16px;
-    width: 90%;
-    max-width: 360px;
-    text-align: center;
-    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.35);
-    animation: popIn 0.25s ease-out;
-}
-
-@keyframes popIn {
-    from { transform: scale(0.8); opacity: 0; }
-    to   { transform: scale(1);   opacity: 1; }
-}
-
-.fp-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: #0f5132;
-    margin-bottom: 4px;
-}
-
-.fp-subtitle {
-    font-size: 13px;
-    color: #4b5563;
-    margin-bottom: 14px;
-}
-
-/* Fingerprint click area */
-.fp-icon-area {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 16px 18px;
-    border-radius: 16px;
-    background: #ecfdf5;
-    cursor: pointer;
-}
-
-/* Fingerprint circle ডিজাইন */
-.fp-fingerprint {
-    width: 85px;
-    height: 85px;
-    border-radius: 50%;
-    border: 3px solid #16a34a;
-    position: relative;
-    overflow: hidden;
-    background:
-        radial-gradient(circle at 50% 60%, #bbf7d0 0, #bbf7d0 25%, #ecfdf5 26%, #ecfdf5 100%),
-        repeating-radial-gradient(
-            circle at 50% 60%,
-            rgba(22,163,74,0.55) 0,
-            rgba(22,163,74,0.55) 2px,
-            transparent 2px,
-            transparent 5px
-        );
-}
-
-.fp-fingerprint::before {
-    content: "";
-    position: absolute;
-    left: -10%;
-    width: 120%;
-    height: 40%;
-    top: 30%;
-    background: linear-gradient(
-        to bottom,
-        rgba(34,197,94,0) 0%,
-        rgba(34,197,94,0.45) 50%,
-        rgba(34,197,94,0) 100%
-    );
-    opacity: 0;
-}
-
-/* স্ক্যানিং অ্যানিমেশন */
-.fp-scanning .fp-fingerprint::before {
-    opacity: 1;
-    animation: fp-scan 0.9s linear infinite;
-}
-
-@keyframes fp-scan {
-    0%   { transform: translateY(120%); }
-    100% { transform: translateY(-120%); }
-}
-
-/* সফল অবস্থায় fingerprint বেশি গ্লো করবে */
-.fp-success .fp-fingerprint {
-    border-color: #16a34a;
-    box-shadow: 0 0 12px rgba(22,163,74,0.7);
-}
-
-.fp-status-text {
-    font-size: 13px;
-    font-weight: 600;
-    color: #14532d;
-}
-
-/* Cancel button */
-.fp-cancel-btn {
-    margin-top: 14px;
-    padding: 7px 16px;
-    border-radius: 999px;
-    border: none;
-    background: #e5e7eb;
-    color: #374151;
-    font-size: 13px;
-    cursor: pointer;
-}
-.fp-cancel-btn:hover {
-    background: #d4d4d8;
-}
-
-/* ---------- RESPONSIVE (MOBILE) ---------- */
+/* ---------- MOBILE FIX ---------- */
 @media (max-width: 768px) {
-    body {
-        padding-top: 68px;
-    }
-
-    .site-title {
-        font-size: 20px;
-    }
 
     .form-card {
-        padding: 20px 14px 22px;
         margin: 14px 8px 30px;
-        box-shadow: 0 8px 18px rgba(15,23,42,0.08);
+        width: calc(100% - 16px);
+        padding: 20px 14px 22px;
     }
 
     .candidate-grid {
@@ -358,19 +217,7 @@ body {
     }
 
     .symbol-circle {
-        width: 150px;                 /* মোবাইলে বড় গোল মার্কা */
+        width: 150px;
         height: 150px;
     }
 }
-
-
-.candidate-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;   /* সব কনটেন্ট perfect center */
-}
-
-.symbol-circle {
-    margin: 0 auto;        /* একেবারে মাঝখানে ধরে রাখে */
-}
-
