@@ -17,7 +17,7 @@
 
 /* টাইটেল ছোট রাখা, যেন চিকন হেডারে ফিট হয় */
 .site-title {
-    font-size: 10
+    font-size: 0.9rem;
     font-weight: 500;
     margin: 10;
     line-height: 1;
@@ -338,6 +338,7 @@
         padding-inline: 0.6rem;
     }
 }
+
 
 
 
