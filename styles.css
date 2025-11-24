@@ -362,3 +362,15 @@ body {
         height: 150px;
     }
 }
+
+
+.candidate-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;   /* সব কনটেন্ট perfect center */
+}
+
+.symbol-circle {
+    margin: 0 auto;        /* একেবারে মাঝখানে ধরে রাখে */
+}
+
