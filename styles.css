@@ -1,362 +1,344 @@
-/* ---------- RESET ---------- */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* ---------- BODY ---------- */
-body {
-    font-family: "Hind Siliguri","Noto Sans Bengali","Poppins",sans-serif;
-    background: #ffffff;
-    color: #111827;
-    line-height: 1.7;
-    padding-top: 72px; /* ফিক্সড হেডারের জন্য গ্যাপ */
-}
-
-.container {
-    width: 95%;
-    max-width: 1100px;
-    margin: 0 auto;
-}
-
-/* ---------- HEADER (thin) ---------- */
+/* Header */
 .site-header {
-    background: #11b28c;
-    padding: 2px 0; /* একেবারে চিকন */
-    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-}
+    background: linear-gradient(20deg, #0f766e, #059669);
+    /* একেবারে চিকন করার জন্য fixed height */
+    height: 50px;
+    padding: 5;
+    margin: 5;
+    
+    /* ভেতরের লেখা vertically center করার জন্য */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-.site-header .container {
     text-align: center;
+    color: #fff;
 }
 
+/* টাইটেল ছোট রাখা, যেন চিকন হেডারে ফিট হয় */
 .site-title {
-    font-size: 20px;
-    font-weight: 200;
-    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 10;
+    line-height: 1;
 }
 
+/* সাবটাইটেল একেবারে লুকিয়ে দিলাম, না হলে হেডার মোটা হয়ে যাবে */
 .site-subtitle {
-    font-size: 12px;
-    color: #ffffff;
+    display: none;
 }
 
-/* ---------- TICKER ---------- */
+/* Ticker */
 .vote-ticker {
-    background: #0f766e;
-    color: #ffffff;
-    font-size: 14px;
+    background: #022c22;
+    color: #e5fdf5;
     overflow: hidden;
     white-space: nowrap;
-    border-bottom: 2px solid #facc15;
-    padding: 6px 0;
+    padding: 0.5rem 0;
 }
 
 .ticker-track {
     display: inline-block;
-    white-space: nowrap;
     padding-left: 100%;
-    animation: ticker-scroll 60s linear infinite;
+    animation: ticker-move 35s linear infinite;
 }
 
 .ticker-item {
-    display: inline-block;
-    padding: 0 50px;
+    font-size: 0.92rem;
+    padding-inline: 2rem;
 }
 
-@keyframes ticker-scroll {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-100%); }
+@keyframes ticker-move {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
 }
 
-/* ---------- MAIN VOTE CARD ---------- */
+/* Main area */
+.main-area {
+    padding: 1.8rem 0 2.5rem;
+}
+
+/* Card section */
 .form-card {
     background: #ffffff;
-    border-radius: 24px;
-    border: 1px solid #e5e7eb;
-    padding: 24px 20px 26px;
-
-    /* পরিষ্কার সেন্টার অ্যালাইনমেন্ট */
-    max-width: 1100px;
-    margin: 20px auto 36px;
-
-    box-shadow: 0 10px 24px rgba(15,23,42,0.06);
+    border-radius: 1.2rem;
+    padding: 1.8rem 1.2rem 2rem;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
 }
 
 .vote-title {
+    font-size: 1.4rem;
     text-align: center;
-    font-size: 26px;
-    font-weight: 700;
-    color: #0f5132;
-    margin-bottom: 6px;
+    margin-bottom: 0.35rem;
 }
 
 .vote-subtitle {
+    font-size: 0.96rem;
     text-align: center;
-    font-size: 14px;
     color: #4b5563;
-    margin-bottom: 20px;
+    max-width: 620px;
+    margin: 0 auto 0.7rem;
 }
 
-/* ---------- GRID ---------- */
+.vote-result {
+    text-align: center;
+    font-size: 0.94rem;
+    color: #2563eb;
+    font-weight: 600;
+    margin-bottom: 1.4rem;
+}
+
+/* Candidate grid */
 .candidate-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.1rem;
 }
 
-/* ---------- CANDIDATE CARD ---------- */
+/* Candidate card */
 .candidate-card {
-    background: #ffffff;
-    border-radius: 20px;
-    border: 1px solid #e5e7eb;
-    padding: 18px 12px 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-
-    /* সব কনটেন্ট ১ লাইনে সুন্দর সেন্টার থাকবে */
+    background: #f9fafb;
+    border-radius: 1rem;
+    padding: 1.2rem 0.9rem 1.4rem;
+    text-align: center;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
+    transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
+    gap: 0.7rem;
 }
 
-/* ---------- BIG ROUND MARKA ---------- */
-.symbol-circle {
-    width: 170px;
-    height: 170px;
-    margin: 0 0 12px;
+.candidate-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.1);
+    background: #ffffff;
+}
 
+/* Symbol circle */
+.symbol-circle {
+    width: 130px;
+    height: 130px;
     border-radius: 50%;
-    border: 3px solid #fbbf24;
+    border: 4px solid #fbbf24;
+    padding: 0.35rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #fff7e5;
-    overflow: hidden;
+    background: radial-gradient(circle at 30% 10%, #fef3c7, #fef9c3);
 }
 
 .symbol-circle img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
+/* Name */
 .candidate-name {
-    font-size: 18px;
+    font-size: 1.05rem;
     font-weight: 700;
-    margin-bottom: 12px;
     color: #111827;
+    min-height: 2.2em;
 }
 
-/* ---------- VOTE BUTTON (Dark Red) ---------- */
+/* Vote button */
 .vote-btn {
-    padding: 9px 26px;
+    margin-top: 0.25rem;
+    padding: 0.55rem 1.6rem;
     border-radius: 999px;
     border: none;
-    background: #dc2626;
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 3px 7px rgba(220,38,38,0.35);
-    transition: background 0.12s, transform 0.12s, box-shadow 0.12s;
+    font-size: 0.95rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    box-shadow: 0 8px 18px rgba(234, 88, 12, 0.35);
+    transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
 }
 
 .vote-btn:hover {
-    background: #b91c1c;
     transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(185,28,28,0.45);
+    filter: brightness(1.03);
+    box-shadow: 0 12px 24px rgba(234, 88, 12, 0.45);
+}
+
+.vote-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 5px 14px rgba(234, 88, 12, 0.3);
 }
 
 .vote-btn.voted {
-    background: #16a34a;
-    box-shadow: 0 4px 12px rgba(22,163,74,0.5);
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    box-shadow: 0 9px 18px rgba(22, 163, 74, 0.35);
 }
 
 .vote-btn-disabled {
-    opacity: 0.6;
+    opacity: 0.75;
     cursor: not-allowed;
 }
 
-/* ---------- RESULT & FOOTER ---------- */
-.vote-result {
-    margin-top: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #065f46;
-    text-align: center;
+/* Footer */
+.site-footer {
+    border-top: 1px solid #e5e7eb;
+    background: #f9fafb;
+    padding: 0.9rem 0 1.4rem;
+    margin-top: auto;
 }
 
-.site-footer {
+.footer-inner {
     text-align: center;
-    padding-bottom: 24px;
-    font-size: 13px;
+    font-size: 0.9rem;
     color: #6b7280;
 }
 
-.site-footer h2 {
-    margin-top: 6px;
-    font-size: 16px;
-    font-weight: 700;
-    color: #111827;
+.footer-credit {
+    margin-top: 0.2rem;
+    font-size: 0.86rem;
 }
 
-/* ---------- FINGERPRINT OVERLAY ---------- */
+/* Fingerprint modal */
 .fp-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.45);
-    display: none;              /* ডিফল্টে লুকানো */
+    background: rgba(15, 23, 42, 0.52);
+    display: none;
     align-items: center;
     justify-content: center;
-    z-index: 9999;
+    z-index: 50;
 }
 
 .fp-overlay.show {
-    display: flex;              /* JS থেকে show করলে দেখা যাবে */
+    display: flex;
 }
 
 .fp-modal {
     background: #ffffff;
-    border-radius: 20px;
-    padding: 20px 22px 16px;
-    width: 90%;
-    max-width: 360px;
+    border-radius: 1.1rem;
+    padding: 1.4rem 1.2rem 1.3rem;
+    width: min(340px, 92vw);
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.3);
     text-align: center;
-    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.35);
-    animation: popIn 0.25s ease-out;
-}
-
-@keyframes popIn {
-    from { transform: scale(0.8); opacity: 0; }
-    to   { transform: scale(1);   opacity: 1; }
 }
 
 .fp-title {
-    font-size: 18px;
+    font-size: 1.05rem;
     font-weight: 700;
-    color: #0f5132;
-    margin-bottom: 4px;
-}
-
-.fp-subtitle {
-    font-size: 13px;
-    color: #4b5563;
-    margin-bottom: 14px;
+    margin-bottom: 0.9rem;
 }
 
 .fp-icon-area {
-    display: inline-flex;
+    margin: 0 auto 1rem;
+    width: 120px;
+    height: 120px;
+    border-radius: 24px;
+    background: radial-gradient(circle at 30% 10%, #ecfeff, #cffafe);
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 16px 18px;
-    border-radius: 16px;
-    background: #ecfdf5;
+    gap: 0.5rem;
     cursor: pointer;
+    transition: transform 0.14s ease, box-shadow 0.14s ease;
+    box-shadow: 0 12px 30px rgba(8, 47, 73, 0.25);
 }
 
-/* Fingerprint circle ডিজাইন */
+.fp-icon-area:hover {
+    transform: translateY(-2px);
+}
+
 .fp-fingerprint {
-    width: 85px;
-    height: 85px;
-    border-radius: 50%;
-    border: 3px solid #16a34a;
+    width: 52px;
+    height: 52px;
+    border-radius: 999px;
+    border: 3px solid #0891b2;
+    box-shadow: inset 0 0 0 2px rgba(8, 145, 178, 0.3);
     position: relative;
-    overflow: hidden;
-    background:
-        radial-gradient(circle at 50% 60%, #bbf7d0 0, #bbf7d0 25%, #ecfdf5 26%, #ecfdf5 100%),
-        repeating-radial-gradient(
-            circle at 50% 60%,
-            rgba(22,163,74,0.55) 0,
-            rgba(22,163,74,0.55) 2px,
-            transparent 2px,
-            transparent 5px
-        );
 }
 
-.fp-fingerprint::before {
+.fp-fingerprint::before,
+.fp-fingerprint::after {
     content: "";
     position: absolute;
-    left: -10%;
-    width: 120%;
-    height: 40%;
-    top: 30%;
-    background: linear-gradient(
-        to bottom,
-        rgba(34,197,94,0) 0%,
-        rgba(34,197,94,0.45) 50%,
-        rgba(34,197,94,0) 100%
-    );
-    opacity: 0;
-}
-
-/* স্ক্যানিং অ্যানিমেশন */
-.fp-scanning .fp-fingerprint::before {
-    opacity: 1;
-    animation: fp-scan 0.9s linear infinite;
-}
-
-@keyframes fp-scan {
-    0%   { transform: translateY(120%); }
-    100% { transform: translateY(-120%); }
-}
-
-.fp-success .fp-fingerprint {
-    border-color: #16a34a;
-    box-shadow: 0 0 12px rgba(22,163,74,0.7);
+    inset: 10%;
+    border-radius: 999px;
+    border: 2px dotted rgba(8, 145, 178, 0.7);
 }
 
 .fp-status-text {
-    font-size: 13px;
-    font-weight: 600;
-    color: #14532d;
+    font-size: 0.9rem;
+    color: #0f172a;
+}
+
+/* scanning state */
+.fp-icon-area.fp-scanning {
+    animation: fp-pulse 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes fp-pulse {
+    from {
+        box-shadow: 0 12px 30px rgba(8, 47, 73, 0.25);
+    }
+    to {
+        box-shadow: 0 18px 40px rgba(8, 47, 73, 0.35);
+    }
+}
+
+/* success state */
+.fp-icon-area.fp-success {
+    background: radial-gradient(circle at 30% 10%, #dcfce7, #bbf7d0);
+}
+
+.fp-icon-area.fp-success .fp-fingerprint {
+    border-color: #16a34a;
+    box-shadow: inset 0 0 0 2px rgba(22, 163, 74, 0.35);
 }
 
 .fp-cancel-btn {
-    margin-top: 14px;
-    padding: 7px 16px;
+    margin-top: 0.4rem;
+    padding: 0.45rem 1.3rem;
     border-radius: 999px;
     border: none;
     background: #e5e7eb;
-    color: #374151;
-    font-size: 13px;
+    color: #111827;
+    font-size: 0.9rem;
     cursor: pointer;
 }
 
-.fp-cancel-btn:hover {
-    background: #d4d4d8;
-}
-
-/* ---------- RESPONSIVE (MOBILE) ---------- */
+/* Responsive tweaks */
 @media (max-width: 768px) {
-    body {
-        padding-top: 68px;
-    }
-
-    .site-title {
-        font-size: 18px;
-    }
-
     .form-card {
-        margin: 14px 8px 30px;
-        padding: 20px 14px 22px;
+        padding-inline: 1rem;
     }
 
     .candidate-grid {
         grid-template-columns: 1fr 1fr;
-        gap: 14px;
+    }
+}
+
+@media (max-width: 540px) {
+    .candidate-grid {
+        grid-template-columns: 1fr;
     }
 
     .symbol-circle {
-        width: 150px;
-        height: 150px;
+        width: 120px;
+        height: 120px;
+    }
+
+    .site-header {
+        padding-inline: 0.6rem;
     }
 }
+
+
+
+
