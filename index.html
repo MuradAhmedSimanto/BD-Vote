@@ -17,9 +17,9 @@
     <!-- মেইন হেডার -->
     <header class="site-header">
         <div class="container">
-            <h1 class="site-title">বাংলাদেশের গণ অধিকার</h1>
+            <h1 class="site-title">বাংলাদেশের ভোটারদের মতামত</h1>
             <p class="site-subtitle">
-                একটি অনানুষ্ঠানিক ভোট প্ল্যাটফর্ম 
+                একটি অনানুষ্ঠানিক ভোট প্ল্যাটফর্ম — শুধু মতামত জানানোর জন্য।
             </p>
         </div>
     </header>
@@ -120,7 +120,7 @@
     <!-- ফুটার -->
     <footer class="site-footer">
         <div class="container footer-inner">
-            <p>© বাংলাদেশের গণ অধিকার </p>
+            <p>© ২০২৫ বাংলাদেশের ভোটারদের মতামত (ডেমো সাইট)</p>
             <p class="footer-credit">Designer &amp; Developer: Murad Ahmmed</p>
         </div>
     </footer>
@@ -139,7 +139,7 @@
 
     <!-- ভোট + এক ডিভাইস এক ভোট + লাইভ কাউন্ট লজিক -->
     <script>
-    // 👉 এখানে তোমার Google Apps Script Web App URL বসাও
+    // 👉 এখানে তোমার Google Apps Script Web App URL বসানো আছে
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzYBpId9BUUvypyY016mv7sRk7zz9TBzCmZUxqOZLthxVdEw0ePR4aMBXZtSYNr5pVT/exec";
 
     // এক ডিভাইস থেকে একবার ভোটের জন্য localStorage key
@@ -149,7 +149,7 @@
     let pendingButton = null;
     let hasVoted = false;
 
-    // Google Sheet এ ভোট পাঠানো
+    // Google Sheet এ ভোট পাঠানো (JSON POST – Apps Script এর JSON.parse এর সাথে মিল)
     function sendVoteToSheet(candidateName) {
         fetch(SCRIPT_URL, {
             method: "POST",
@@ -227,7 +227,7 @@
             pendingCandidateName = this.getAttribute('data-name');
             pendingButton = this;
 
-            document.getElementById('fpStatusText').textContent = 'ফিঙ্গারপ্রিন্ট দিন...';
+            document.getElementById('fpStatusText').textContent = 'আঙুল দিন...';
             const iconArea = document.getElementById('fpIconArea');
             iconArea.classList.remove('fp-scanning', 'fp-success');
 
