@@ -150,17 +150,18 @@
     let hasVoted = false;
 
     // Google Sheet এ ভোট পাঠানো (JSON POST – Apps Script এর JSON.parse এর সাথে মিল)
-    function sendVoteToSheet(candidateName) {
-        fetch(SCRIPT_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ candidate: candidateName })
-        }).catch(err => {
-            console.error("Vote send error:", err);
-        });
-    }
+   function sendVoteToSheet(candidateName) {
+    const formData = new URLSearchParams();
+    formData.append("candidate", candidateName);
+
+    fetch(SCRIPT_URL, {
+        method: "POST",
+        body: formData      // কোনো header লাগবে না
+    }).catch(err => {
+        console.error("Vote send error:", err);
+    });
+}
+
 
     // Google Sheet থেকে সব ভোট কাউন্ট আনা
     function fetchVoteCounts() {
