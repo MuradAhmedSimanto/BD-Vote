@@ -338,6 +338,15 @@
         padding-inline: 0.6rem;
     }
 }
+.live-count {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin: 0.1rem 0 0.2rem;
+}
+.live-count .count {
+    font-weight: 700;
+    color: #111827;
+}
 
 
 
