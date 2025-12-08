@@ -79,7 +79,7 @@
 .vote-subtitle {
     font-size: 0.96rem;
     text-align: center;
-    color: #4b5563;
+    color: #E60000;
     max-width: 620px;
     margin: 0 auto 0.7rem;
 }
@@ -347,6 +347,7 @@
     font-weight: 700;
     color: #111827;
 }
+
 
 
 
