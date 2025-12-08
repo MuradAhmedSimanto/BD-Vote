@@ -203,6 +203,7 @@
 .footer-credit {
     margin-top: 0.2rem;
     font-size: 0.86rem;
+    color: #E60000;
 }
 
 /* Fingerprint modal */
@@ -347,6 +348,7 @@
     font-weight: 700;
     color: #111827;
 }
+
 
 
 
