@@ -26,14 +26,14 @@
     <section class="vote-ticker">
         <div class="ticker-track">
             <span class="ticker-item">
-                আপনার একটি সঠিক ভোট উন্নয়ন, ন্যায়বিচার আর গণতন্ত্রকে শক্ত করে। 
-                ভেবে ভোট দিন, দায়িত্ব নিয়ে ভোট দিন। 
-                দেশ গড়ার প্রথম পদক্ষেপই হলো সঠিক ভোট। 
-                ভোট আপনার অধিকার—এটা সচেতনভাবে ব্যবহার করুন। 
-                আপনার ভোট দেশের ভবিষ্যৎ প্রজন্মকে নিরাপদ করতে পারে। 
-                দল নয়, মানুষ ও দেশের স্বার্থ দেখে ভোট দিন। 
-                সৎ নেতৃত্ব নির্বাচন করুন, দুর্নীতিমুক্ত ভবিষ্যৎ গড়ুন। 
-                আপনার ভোট—আপনার শক্তি, দেশ গড়ার চাবিকাঠি। 
+                আপনার একটি সঠিক ভোট উন্নয়ন, ন্যায়বিচার আর গণতন্ত্রকে শক্ত করে।
+                ভেবে ভোট দিন, দায়িত্ব নিয়ে ভোট দিন।
+                দেশ গড়ার প্রথম পদক্ষেপই হলো সঠিক ভোট।
+                ভোট আপনার অধিকার—এটা সচেতনভাবে ব্যবহার করুন।
+                আপনার ভোট দেশের ভবিষ্যৎ প্রজন্মকে নিরাপদ করতে পারে।
+                দল নয়, মানুষ ও দেশের স্বার্থ দেখে ভোট দিন।
+                সৎ নেতৃত্ব নির্বাচন করুন, দুর্নীতিমুক্ত ভবিষ্যৎ গড়ুন।
+                আপনার ভোট—আপনার শক্তি, দেশ গড়ার চাবিকাঠি।
                 যে প্রার্থী মানুষের পাশে থাকে, তাকে ভোট দিন।
             </span>
         </div>
@@ -139,35 +139,37 @@
         // =========================
         //   JSONBin CONFIG
         // =========================
-        const BIN_ID   = "6936e928d0ea881f401aedf4";
-        const API_KEY  = "$2a$10$UbEVKrlYPHCwuSQfgBbgv.IkD3ajeDCX9m5bmGu8/hSWrdDAnJGEK";
-        const API_URL  = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+        const BIN_ID  = "6936e928d0ea881f401aedf4";
+        const API_KEY = "$2a$10$UbEVKrlYPHCwuSQfgBbgv.IkD3ajeDCX9m5bmGu8/hSWrdDAnJGEK";
+        const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
-        // এক ডিভাইস এক ভোট জন্য localStorage key
+        // এক ডিভাইস এক ভোট
         const STORAGE_KEY = "bdvote_hasVoted_v1";
 
         let pendingCandidateName = null;
         let pendingButton = null;
         let hasVoted = false;
+        let isSubmitting = false;
 
         // =========================
         //   JSONBin থেকে ভোট আনা
         // =========================
         async function loadVotes() {
             try {
-                const res = await fetch(API_URL, {
+                const res = await fetch(`${API_URL}/latest?meta=false`, {
                     headers: {
-                        "X-ACCESS-KEY": API_KEY
-                        // যদি এটা কাজ না করে, JSONBin ড্যাশবোর্ডে দেখে
-                        // দরকার হলে "X-MASTER-KEY" ব্যবহার করবে
+                        "X-Access-Key": API_KEY
                     }
                 });
+
                 if (!res.ok) {
-                    console.error("Fetch votes failed:", res.status);
+                    const txt = await res.text();
+                    console.error("Load votes failed:", res.status, txt);
                     return;
                 }
-                const body = await res.json();
-                const record = body.record || {};
+
+                // meta=false দিলে সরাসরি record পাবে
+                const data = await res.json();
 
                 const defaults = {
                     "BNP": 0,
@@ -176,7 +178,7 @@
                     "NCP": 0,
                     "ইসলামী আন্দোলন": 0
                 };
-                const votes = Object.assign({}, defaults, record);
+                const votes = Object.assign({}, defaults, data);
 
                 document.querySelectorAll(".live-count").forEach(el => {
                     const name = el.getAttribute("data-candidate");
@@ -191,27 +193,26 @@
         }
 
         // =========================
-        //   JSONBin এ ভোট লেখা
+        //   JSONBin এ ভোট লিখা
         // =========================
-        let isSubmitting = false;
-
         async function sendVoteToAPI(candidateName) {
             if (isSubmitting) return;
             isSubmitting = true;
 
             try {
-                // আগে current data আনবো
-                const resGet = await fetch(API_URL, {
-                    headers: { "X-ACCESS-KEY": API_KEY }
+                // আগে current votes আনবো
+                const resGet = await fetch(`${API_URL}/latest?meta=false`, {
+                    headers: { "X-Access-Key": API_KEY }
                 });
+
                 if (!resGet.ok) {
-                    console.error("Read error:", resGet.status);
+                    const txt = await resGet.text();
+                    console.error("Read error:", resGet.status, txt);
                     isSubmitting = false;
                     return;
                 }
 
-                const body = await resGet.json();
-                const record = body.record || {};
+                const data = await resGet.json();
 
                 const defaults = {
                     "BNP": 0,
@@ -220,28 +221,28 @@
                     "NCP": 0,
                     "ইসলামী আন্দোলন": 0
                 };
-                const votes = Object.assign({}, defaults, record);
+                const votes = Object.assign({}, defaults, data);
 
-                // কাউন্ট বাড়াই
-                votes[candidateName] = (Number(votes[candidateName] || 0) + 1);
+                votes[candidateName] = Number(votes[candidateName] || 0) + 1;
 
-                // এখন PUT করে সেভ করি
+                // এখন PUT করে আপডেট
                 const resPut = await fetch(API_URL, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
-                        "X-ACCESS-KEY": API_KEY
+                        "X-Access-Key": API_KEY
                     },
                     body: JSON.stringify(votes)
                 });
 
                 if (!resPut.ok) {
-                    console.error("Update error:", resPut.status);
+                    const txt = await resPut.text();
+                    console.error("Update error:", resPut.status, txt);
                     return;
                 }
 
-                // UI আপডেট
-                loadVotes();
+                // সফল হলে UI রিফ্রেশ
+                await loadVotes();
 
             } catch (err) {
                 console.error("sendVoteToAPI error:", err);
@@ -296,9 +297,9 @@
                     pendingCandidateName = this.getAttribute("data-name");
                     pendingButton = this;
 
-                    document.getElementById("fpStatusText").textContent = "ফিঙ্গারপ্রিন্ট দিন...";
                     const iconArea = document.getElementById("fpIconArea");
                     iconArea.classList.remove("fp-scanning", "fp-success");
+                    document.getElementById("fpStatusText").textContent = "ফিঙ্গারপ্রিন্ট দিন...";
 
                     document.getElementById("fpOverlay").classList.add("show");
                 });
@@ -335,11 +336,11 @@
                     // API তে ভোট পাঠাও
                     await sendVoteToAPI(pendingCandidateName);
 
-                    // voted ক্লাস
+                    // সব বাটন lock + voted ক্লাস
                     document.querySelectorAll(".vote-btn").forEach(b => {
-                        b.classList.remove("voted");
                         b.disabled = true;
                         b.classList.add("vote-btn-disabled");
+                        b.classList.remove("voted");
                     });
                     if (pendingButton) {
                         pendingButton.classList.add("voted");
@@ -353,7 +354,6 @@
                     }
 
                     setTimeout(() => overlay.classList.remove("show"), 900);
-
                 }, 1200);
             });
 
@@ -371,7 +371,7 @@
             setupVoteButtons();
             setupFingerprintPopup();
 
-            // চাইলে auto refresh:
+            // চাইলে অটো রিফ্রেশ:
             // setInterval(loadVotes, 5000);
         });
     </script>
