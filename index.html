@@ -151,14 +151,22 @@
         let hasVoted = false;
         let isSubmitting = false;
 
+        const DEFAULT_VOTES = {
+            "BNP": 0,
+            "বাংলাদেশ জামায়াতে ইসলামী": 0,
+            "আওয়ামী লীগ": 0,
+            "NCP": 0,
+            "ইসলামী আন্দোলন": 0
+        };
+
         // =========================
         //   JSONBin থেকে ভোট আনা
         // =========================
         async function loadVotes() {
             try {
-                const res = await fetch(`${API_URL}/latest?meta=false`, {
+                const res = await fetch(`${API_URL}/latest`, {
                     headers: {
-                        "X-Access-Key": API_KEY
+                        "X-Master-Key": API_KEY
                     }
                 });
 
@@ -168,17 +176,9 @@
                     return;
                 }
 
-                // meta=false দিলে সরাসরি record পাবে
                 const data = await res.json();
-
-                const defaults = {
-                    "BNP": 0,
-                    "বাংলাদেশ জামায়াতে ইসলামী": 0,
-                    "আওয়ামী লীগ": 0,
-                    "NCP": 0,
-                    "ইসলামী আন্দোলন": 0
-                };
-                const votes = Object.assign({}, defaults, data);
+                const record = data.record || {};
+                const votes = Object.assign({}, DEFAULT_VOTES, record);
 
                 document.querySelectorAll(".live-count").forEach(el => {
                     const name = el.getAttribute("data-candidate");
@@ -201,8 +201,8 @@
 
             try {
                 // আগে current votes আনবো
-                const resGet = await fetch(`${API_URL}/latest?meta=false`, {
-                    headers: { "X-Access-Key": API_KEY }
+                const resGet = await fetch(`${API_URL}/latest`, {
+                    headers: { "X-Master-Key": API_KEY }
                 });
 
                 if (!resGet.ok) {
@@ -213,15 +213,8 @@
                 }
 
                 const data = await resGet.json();
-
-                const defaults = {
-                    "BNP": 0,
-                    "বাংলাদেশ জামায়াতে ইসলামী": 0,
-                    "আওয়ামী লীগ": 0,
-                    "NCP": 0,
-                    "ইসলামী আন্দোলন": 0
-                };
-                const votes = Object.assign({}, defaults, data);
+                const record = data.record || {};
+                const votes = Object.assign({}, DEFAULT_VOTES, record);
 
                 votes[candidateName] = Number(votes[candidateName] || 0) + 1;
 
@@ -230,7 +223,7 @@
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
-                        "X-Access-Key": API_KEY
+                        "X-Master-Key": API_KEY
                     },
                     body: JSON.stringify(votes)
                 });
@@ -241,7 +234,6 @@
                     return;
                 }
 
-                // সফল হলে UI রিফ্রেশ
                 await loadVotes();
 
             } catch (err) {
@@ -326,17 +318,14 @@
 
                     if (!pendingCandidateName) return;
 
-                    // এই ডিভাইসে ভোট শেষ
                     hasVoted = true;
                     localStorage.setItem(
                         STORAGE_KEY,
                         JSON.stringify({ voted: true, candidate: pendingCandidateName })
                     );
 
-                    // API তে ভোট পাঠাও
                     await sendVoteToAPI(pendingCandidateName);
 
-                    // সব বাটন lock + voted ক্লাস
                     document.querySelectorAll(".vote-btn").forEach(b => {
                         b.disabled = true;
                         b.classList.add("vote-btn-disabled");
