@@ -17,7 +17,7 @@
         <div class="container">
             <h1 class="site-title">বাংলাদেশের গণ অধিকার</h1>
             <p class="site-subtitle">
-                একটি অনানুষ্ঠানিক ভোট প্ল্যাটফর্ম
+                একটি অনানুষ্ঠানিক ভোট প্ল্যাটফর্ম 
             </p>
         </div>
     </header>
@@ -26,14 +26,14 @@
     <section class="vote-ticker">
         <div class="ticker-track">
             <span class="ticker-item">
-                আপনার একটি সঠিক ভোট উন্নয়ন, ন্যায়বিচার আর গণতন্ত্রকে শক্ত করে।
-                ভেবে ভোট দিন, দায়িত্ব নিয়ে ভোট দিন।
-                দেশ গড়ার প্রথম পদক্ষেপই হলো সঠিক ভোট।
-                ভোট আপনার অধিকার—এটা সচেতনভাবে ব্যবহার করুন।
-                আপনার ভোট দেশের ভবিষ্যৎ প্রজন্মকে নিরাপদ করতে পারে।
-                দল নয়, মানুষ ও দেশের স্বার্থ দেখে ভোট দিন।
-                সৎ নেতৃত্ব নির্বাচন করুন, দুর্নীতিমুক্ত ভবিষ্যৎ গড়ুন।
-                আপনার ভোট—আপনার শক্তি, দেশ গড়ার চাবিকাঠি।
+                আপনার একটি সঠিক ভোট উন্নয়ন, ন্যায়বিচার আর গণতন্ত্রকে শক্ত করে। 
+                ভেবে ভোট দিন, দায়িত্ব নিয়ে ভোট দিন। 
+                দেশ গড়ার প্রথম পদক্ষেপই হলো সঠিক ভোট। 
+                ভোট আপনার অধিকার—এটা সচেতনভাবে ব্যবহার করুন। 
+                আপনার ভোট দেশের ভবিষ্যৎ প্রজন্মকে নিরাপদ করতে পারে। 
+                দল নয়, মানুষ ও দেশের স্বার্থ দেখে ভোট দিন। 
+                সৎ নেতৃত্ব নির্বাচন করুন, দুর্নীতিমুক্ত ভবিষ্যৎ গড়ুন। 
+                আপনার ভোট—আপনার শক্তি, দেশ গড়ার চাবিকাঠি। 
                 যে প্রার্থী মানুষের পাশে থাকে, তাকে ভোট দিন।
             </span>
         </div>
@@ -117,7 +117,7 @@
     <!-- ফুটার -->
     <footer class="site-footer">
         <div class="container footer-inner">
-            <p>© বাংলাদেশের গণ অধিকার ২০২৫</p>
+            <p>© বাংলাদেশের গণ অধিকার ২০২৫ </p>
             <p class="footer-credit">Designer &amp; Developer: Murad Ahmmed</p>
         </div>
     </footer>
@@ -134,67 +134,125 @@
         </div>
     </div>
 
-    <!-- ভোট + এক ডিভাইস এক ভোট + লাইভ কাউন্ট লজিক -->
+    <!-- ভোট + এক ডিভাইস এক ভোট + JSONBin লাইভ কাউন্ট -->
     <script>
         // =========================
-        //   CONFIG & STATE
+        //   JSONBin CONFIG
         // =========================
+        const BIN_ID   = "6936e928d0ea881f401aedf4";
+        const API_KEY  = "$2a$10$UbEVKrlYPHCwuSQfgBbgv.IkD3ajeDCX9m5bmGu8/hSWrdDAnJGEK";
+        const API_URL  = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
-        // তোমার Google Apps Script Web App URL
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzYBpId9BUUvypyY016mv7sRk7zz9TBzCmZUxqOZLthxVdEw0ePR4aMBXZtSYNr5pVT/exec";
-
-        // এক ডিভাইস থেকে একবার ভোটের জন্য localStorage key
+        // এক ডিভাইস এক ভোট জন্য localStorage key
         const STORAGE_KEY = "bdvote_hasVoted_v1";
 
-        let pendingCandidateName = null;   // ফিঙ্গারপ্রিন্ট কনফার্ম না হওয়া পর্যন্ত পেন্ডিং নাম
-        let pendingButton = null;          // কোন বাটনে ক্লিক করা হয়েছিল
-        let hasVoted = false;              // এই ডিভাইস থেকে আগেই ভোট দিয়েছে কি না
+        let pendingCandidateName = null;
+        let pendingButton = null;
+        let hasVoted = false;
 
         // =========================
-        //   VOTE → GOOGLE SHEET
+        //   JSONBin থেকে ভোট আনা
         // =========================
-
-        // Google Sheet এ ভোট পাঠানো (form POST – Apps Script এ e.parameter.candidate)
-        function sendVoteToSheet(candidateName) {
-            const formData = new URLSearchParams();
-            formData.append("candidate", candidateName);
-
-            fetch(SCRIPT_URL, {
-                method: "POST",
-                body: formData
-            }).catch(err => {
-                console.error("Vote send error:", err);
-            });
-        }
-
-        // =========================
-        //   COUNT FETCH & RENDER
-        // =========================
-
-        // Google Sheet থেকে সব ভোট কাউন্ট আনা
-        function fetchVoteCounts() {
-            fetch(SCRIPT_URL)
-                .then(r => r.json())
-                .then(data => {
-                    const counts = (data && data.counts) || {};
-
-                    document.querySelectorAll(".live-count").forEach(el => {
-                        const name = el.getAttribute("data-candidate");
-                        const c = counts[name] || 0;
-                        const span = el.querySelector(".count");
-                        if (span) span.textContent = c;
-                    });
-                })
-                .catch(err => {
-                    console.error("Count fetch error:", err);
+        async function loadVotes() {
+            try {
+                const res = await fetch(API_URL, {
+                    headers: {
+                        "X-ACCESS-KEY": API_KEY
+                        // যদি এটা কাজ না করে, JSONBin ড্যাশবোর্ডে দেখে
+                        // দরকার হলে "X-MASTER-KEY" ব্যবহার করবে
+                    }
                 });
+                if (!res.ok) {
+                    console.error("Fetch votes failed:", res.status);
+                    return;
+                }
+                const body = await res.json();
+                const record = body.record || {};
+
+                const defaults = {
+                    "BNP": 0,
+                    "বাংলাদেশ জামায়াতে ইসলামী": 0,
+                    "আওয়ামী লীগ": 0,
+                    "NCP": 0,
+                    "ইসলামী আন্দোলন": 0
+                };
+                const votes = Object.assign({}, defaults, record);
+
+                document.querySelectorAll(".live-count").forEach(el => {
+                    const name = el.getAttribute("data-candidate");
+                    const span = el.querySelector(".count");
+                    if (!span) return;
+                    span.textContent = votes[name] ?? 0;
+                });
+
+            } catch (err) {
+                console.error("loadVotes error:", err);
+            }
         }
 
         // =========================
-        //   LOCALSTORAGE STATE
+        //   JSONBin এ ভোট লেখা
         // =========================
+        let isSubmitting = false;
 
-        // localStorage থেকে আগের ভোট স্টেট রিস্টোর
+        async function sendVoteToAPI(candidateName) {
+            if (isSubmitting) return;
+            isSubmitting = true;
+
+            try {
+                // আগে current data আনবো
+                const resGet = await fetch(API_URL, {
+                    headers: { "X-ACCESS-KEY": API_KEY }
+                });
+                if (!resGet.ok) {
+                    console.error("Read error:", resGet.status);
+                    isSubmitting = false;
+                    return;
+                }
+
+                const body = await resGet.json();
+                const record = body.record || {};
+
+                const defaults = {
+                    "BNP": 0,
+                    "বাংলাদেশ জামায়াতে ইসলামী": 0,
+                    "আওয়ামী লীগ": 0,
+                    "NCP": 0,
+                    "ইসলামী আন্দোলন": 0
+                };
+                const votes = Object.assign({}, defaults, record);
+
+                // কাউন্ট বাড়াই
+                votes[candidateName] = (Number(votes[candidateName] || 0) + 1);
+
+                // এখন PUT করে সেভ করি
+                const resPut = await fetch(API_URL, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-ACCESS-KEY": API_KEY
+                    },
+                    body: JSON.stringify(votes)
+                });
+
+                if (!resPut.ok) {
+                    console.error("Update error:", resPut.status);
+                    return;
+                }
+
+                // UI আপডেট
+                loadVotes();
+
+            } catch (err) {
+                console.error("sendVoteToAPI error:", err);
+            } finally {
+                isSubmitting = false;
+            }
+        }
+
+        // =========================
+        //   আগের ভোট স্টেট (localStorage)
+        // =========================
         function initPreviousVoteState() {
             const saved = localStorage.getItem(STORAGE_KEY);
             if (!saved) return;
@@ -204,14 +262,9 @@
                 if (obj && obj.voted && obj.candidate) {
                     hasVoted = true;
 
-                    // সব বাটন disable
                     document.querySelectorAll(".vote-btn").forEach(b => {
                         b.disabled = true;
                         b.classList.add("vote-btn-disabled");
-                    });
-
-                    // যে প্রার্থীকে ভোট দিয়েছিলে, সেই বাটনে voted ক্লাস
-                    document.querySelectorAll(".vote-btn").forEach(b => {
                         if (b.getAttribute("data-name") === obj.candidate) {
                             b.classList.add("voted");
                         }
@@ -230,14 +283,11 @@
         }
 
         // =========================
-        //   VOTE BUTTON HANDLERS
+        //   Vote button click
         // =========================
-
-        // "ভোট দিন" বাটনের ইভেন্ট সেটআপ
         function setupVoteButtons() {
             document.querySelectorAll(".vote-btn").forEach(btn => {
                 btn.addEventListener("click", function () {
-
                     if (hasVoted) {
                         alert("আপনি ইতিমধ্যে এই ডিভাইস থেকে ভোট দিয়েছেন। আবার ভোট দিতে পারবেন না।");
                         return;
@@ -256,24 +306,22 @@
         }
 
         // =========================
-        //   FINGERPRINT POPUP
+        //   Fingerprint popup
         // =========================
-
         function setupFingerprintPopup() {
-            const iconArea = document.getElementById("fpIconArea");
-            const statusText = document.getElementById("fpStatusText");
-            const overlay = document.getElementById("fpOverlay");
+            const iconArea  = document.getElementById("fpIconArea");
+            const statusTxt = document.getElementById("fpStatusText");
+            const overlay   = document.getElementById("fpOverlay");
             const cancelBtn = document.getElementById("fpCancelBtn");
 
-            // ফিঙ্গারপ্রিন্ট আইকনে ক্লিক = ভোট নিশ্চিত
             iconArea.addEventListener("click", function () {
                 iconArea.classList.add("fp-scanning");
-                statusText.textContent = "স্ক্যান হচ্ছে...";
+                statusTxt.textContent = "স্ক্যান হচ্ছে...";
 
-                setTimeout(function () {
+                setTimeout(async function () {
                     iconArea.classList.remove("fp-scanning");
                     iconArea.classList.add("fp-success");
-                    statusText.textContent = "ভোট রেকর্ড হয়েছে।";
+                    statusTxt.textContent = "ভোট রেকর্ড হয়েছে।";
 
                     if (!pendingCandidateName) return;
 
@@ -284,24 +332,19 @@
                         JSON.stringify({ voted: true, candidate: pendingCandidateName })
                     );
 
-                    // Google Sheet এ ভোট পাঠাও
-                    sendVoteToSheet(pendingCandidateName);
+                    // API তে ভোট পাঠাও
+                    await sendVoteToAPI(pendingCandidateName);
 
-                    // voted ক্লাস আপডেট
+                    // voted ক্লাস
                     document.querySelectorAll(".vote-btn").forEach(b => {
                         b.classList.remove("voted");
+                        b.disabled = true;
+                        b.classList.add("vote-btn-disabled");
                     });
                     if (pendingButton) {
                         pendingButton.classList.add("voted");
                     }
 
-                    // সব বাটন disable
-                    document.querySelectorAll(".vote-btn").forEach(b => {
-                        b.disabled = true;
-                        b.classList.add("vote-btn-disabled");
-                    });
-
-                    // উপরের মেসেজ
                     const result = document.querySelector(".vote-result");
                     if (result) {
                         result.textContent =
@@ -309,36 +352,28 @@
                             '" কে ভোট দিয়েছেন। এই ডিভাইস থেকে আর ভোট দেওয়া যাবে না।';
                     }
 
-                    // পপআপ বন্ধ
-                    setTimeout(function () {
-                        overlay.classList.remove("show");
-                    }, 900);
+                    setTimeout(() => overlay.classList.remove("show"), 900);
 
-                    // কিছু সময় পর কাউন্ট রিফ্রেশ
-                    setTimeout(fetchVoteCounts, 1200);
                 }, 1200);
             });
 
-            // বাতিল বাটন
             cancelBtn.addEventListener("click", function () {
                 overlay.classList.remove("show");
             });
         }
 
         // =========================
-        //   INIT ON PAGE LOAD
+        //   INIT
         // =========================
-
         document.addEventListener("DOMContentLoaded", function () {
-            initPreviousVoteState();   // আগের ভোট থাকলে দেখাও
-            fetchVoteCounts();         // লাইভ কাউন্ট লোড
-            setupVoteButtons();        // বাটনে ইভেন্ট লাগাও
-            setupFingerprintPopup();   // ফিঙ্গারপ্রিন্ট popup ইভেন্ট
+            initPreviousVoteState();
+            loadVotes();
+            setupVoteButtons();
+            setupFingerprintPopup();
 
-            // চাইলে অটো রিফ্রেশ দিতে পারো:
-            // setInterval(fetchVoteCounts, 5000);
+            // চাইলে auto refresh:
+            // setInterval(loadVotes, 5000);
         });
     </script>
 </body>
 </html>
-
