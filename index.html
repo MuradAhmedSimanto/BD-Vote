@@ -9,9 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
     <!-- Main CSS -->
-     <link rel="stylesheet" href="styles.css">
-
-
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <!-- মেইন হেডার -->
@@ -29,7 +27,6 @@
         <div class="ticker-track">
             <span class="ticker-item">
                 আপনার একটি সঠিক ভোট উন্নয়ন, ন্যায়বিচার আর গণতন্ত্রকে শক্ত করে। 
-                 
                 ভেবে ভোট দিন, দায়িত্ব নিয়ে ভোট দিন। 
                 দেশ গড়ার প্রথম পদক্ষেপই হলো সঠিক ভোট। 
                 ভোট আপনার অধিকার—এটা সচেতনভাবে ব্যবহার করুন। 
@@ -139,7 +136,7 @@
 
     <!-- ভোট + এক ডিভাইস এক ভোট + লাইভ কাউন্ট লজিক -->
     <script>
-    // 👉 এখানে তোমার Google Apps Script Web App URL বসানো আছে
+    // 👉 তোমার Google Apps Script Web App URL
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzYBpId9BUUvypyY016mv7sRk7zz9TBzCmZUxqOZLthxVdEw0ePR4aMBXZtSYNr5pVT/exec";
 
     // এক ডিভাইস থেকে একবার ভোটের জন্য localStorage key
@@ -149,19 +146,18 @@
     let pendingButton = null;
     let hasVoted = false;
 
-    // Google Sheet এ ভোট পাঠানো (JSON POST – Apps Script এর JSON.parse এর সাথে মিল)
-   function sendVoteToSheet(candidateName) {
-    const formData = new URLSearchParams();
-    formData.append("candidate", candidateName);
+    // Google Sheet এ ভোট পাঠানো (form POST – e.parameter.candidate)
+    function sendVoteToSheet(candidateName) {
+        const formData = new URLSearchParams();
+        formData.append("candidate", candidateName);
 
-    fetch(SCRIPT_URL, {
-        method: "POST",
-        body: formData      // কোনো header লাগবে না
-    }).catch(err => {
-        console.error("Vote send error:", err);
-    });
-}
-
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: formData
+        }).catch(err => {
+            console.error("Vote send error:", err);
+        });
+    }
 
     // Google Sheet থেকে সব ভোট কাউন্ট আনা
     function fetchVoteCounts() {
@@ -197,7 +193,7 @@
                     b.classList.add('vote-btn-disabled');
                 });
 
-                // যে প্রার্থীকে ভোট দিয়েছিল, সেই বাটনে voted ক্লাস
+                // যে প্রার্থীকে ভোট দিয়েছিলে, সেই বাটনে voted ক্লাস
                 document.querySelectorAll('.vote-btn').forEach(function (b) {
                     if (b.getAttribute('data-name') === obj.candidate) {
                         b.classList.add('voted');
@@ -216,93 +212,101 @@
         }
     }
 
-    // সব "ভোট দিন" বাটনের ইভেন্ট
-    document.querySelectorAll('.vote-btn').forEach(function (btn) {
-        btn.addEventListener('click', function () {
+    // "ভোট দিন" বাটনের ইভেন্ট সেটআপ
+    function setupVoteButtons() {
+        document.querySelectorAll('.vote-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
 
-            if (hasVoted) {
-                alert('আপনি ইতিমধ্যে এই ডিভাইস থেকে ভোট দিয়েছেন। আবার ভোট দিতে পারবেন না।');
-                return;
-            }
+                if (hasVoted) {
+                    alert('আপনি ইতিমধ্যে এই ডিভাইস থেকে ভোট দিয়েছেন। আবার ভোট দিতে পারবেন না।');
+                    return;
+                }
 
-            pendingCandidateName = this.getAttribute('data-name');
-            pendingButton = this;
+                pendingCandidateName = this.getAttribute('data-name');
+                pendingButton = this;
 
-            document.getElementById('fpStatusText').textContent = 'ফিঙ্গারপ্রিন্ট দিন...';
-            const iconArea = document.getElementById('fpIconArea');
-            iconArea.classList.remove('fp-scanning', 'fp-success');
+                document.getElementById('fpStatusText').textContent = 'ফিঙ্গারপ্রিন্ট দিন...';
+                const iconArea = document.getElementById('fpIconArea');
+                iconArea.classList.remove('fp-scanning', 'fp-success');
 
-            document.getElementById('fpOverlay').classList.add('show');
+                document.getElementById('fpOverlay').classList.add('show');
+            });
         });
-    });
+    }
 
-    // ফিঙ্গারপ্রিন্ট আইকনে ক্লিক = ভোট নিশ্চিত
-    document.getElementById('fpIconArea').addEventListener('click', function () {
-        const statusText = document.getElementById('fpStatusText');
-        const iconArea = document.getElementById('fpIconArea');
+    // ফিঙ্গারপ্রিন্ট পপআপের ইভেন্ট
+    function setupFingerprintPopup() {
+        // ফিঙ্গারপ্রিন্ট আইকনে ক্লিক = ভোট নিশ্চিত
+        document.getElementById('fpIconArea').addEventListener('click', function () {
+            const statusText = document.getElementById('fpStatusText');
+            const iconArea = document.getElementById('fpIconArea');
 
-        iconArea.classList.add('fp-scanning');
-        statusText.textContent = 'স্ক্যান হচ্ছে...';
+            iconArea.classList.add('fp-scanning');
+            statusText.textContent = 'স্ক্যান হচ্ছে...';
 
-        setTimeout(function () {
-            iconArea.classList.remove('fp-scanning');
-            iconArea.classList.add('fp-success');
-            statusText.textContent = 'ভোট রেকর্ড হয়েছে।';
-
-            if (!pendingCandidateName) return;
-
-            // এই ডিভাইসে ভোট শেষ
-            hasVoted = true;
-            localStorage.setItem(
-                STORAGE_KEY,
-                JSON.stringify({ voted: true, candidate: pendingCandidateName })
-            );
-
-            // Google Sheet এ ভোট পাঠাও
-            sendVoteToSheet(pendingCandidateName);
-
-            // voted ক্লাস আপডেট
-            document.querySelectorAll('.vote-btn').forEach(function (b) {
-                b.classList.remove('voted');
-            });
-            if (pendingButton) {
-                pendingButton.classList.add('voted');
-            }
-
-            // সব বাটন disable
-            document.querySelectorAll('.vote-btn').forEach(function (b) {
-                b.disabled = true;
-                b.classList.add('vote-btn-disabled');
-            });
-
-            // উপরের মেসেজ
-            const result = document.querySelector('.vote-result');
-            if (result) {
-                result.textContent =
-                    'আপনি "' + pendingCandidateName +
-                    '" কে ভোট দিয়েছেন। এই ডিভাইস থেকে আর ভোট দেওয়া যাবে না।';
-            }
-
-            // পপআপ বন্ধ
             setTimeout(function () {
-                document.getElementById('fpOverlay').classList.remove('show');
-            }, 900);
+                iconArea.classList.remove('fp-scanning');
+                iconArea.classList.add('fp-success');
+                statusText.textContent = 'ভোট রেকর্ড হয়েছে।';
 
-            // কাউন্ট রিফ্রেশ
-            setTimeout(fetchVoteCounts, 1200);
-        }, 1200);
-    });
+                if (!pendingCandidateName) return;
 
-    // বাতিল বাটন
-    document.getElementById('fpCancelBtn').addEventListener('click', function () {
-        document.getElementById('fpOverlay').classList.remove('show');
-    });
+                // এই ডিভাইসে ভোট শেষ
+                hasVoted = true;
+                localStorage.setItem(
+                    STORAGE_KEY,
+                    JSON.stringify({ voted: true, candidate: pendingCandidateName })
+                );
 
-    // পেজ লোড হলে আগের ভোট স্টেট + কাউন্ট লোড
+                // Google Sheet এ ভোট পাঠাও
+                sendVoteToSheet(pendingCandidateName);
+
+                // voted ক্লাস আপডেট
+                document.querySelectorAll('.vote-btn').forEach(function (b) {
+                    b.classList.remove('voted');
+                });
+                if (pendingButton) {
+                    pendingButton.classList.add('voted');
+                }
+
+                // সব বাটন disable
+                document.querySelectorAll('.vote-btn').forEach(function (b) {
+                    b.disabled = true;
+                    b.classList.add('vote-btn-disabled');
+                });
+
+                // উপরের মেসেজ
+                const result = document.querySelector('.vote-result');
+                if (result) {
+                    result.textContent =
+                        'আপনি "' + pendingCandidateName +
+                        '" কে ভোট দিয়েছেন। এই ডিভাইস থেকে আর ভোট দেওয়া যাবে না।';
+                }
+
+                // পপআপ বন্ধ
+                setTimeout(function () {
+                    document.getElementById('fpOverlay').classList.remove('show');
+                }, 900);
+
+                // কাউন্ট রিফ্রেশ
+                setTimeout(fetchVoteCounts, 1200);
+            }, 1200);
+        });
+
+        // বাতিল বাটন
+        document.getElementById('fpCancelBtn').addEventListener('click', function () {
+            document.getElementById('fpOverlay').classList.remove('show');
+        });
+    }
+
+    // পেজ লোড হলে সবকিছু সেটআপ
     document.addEventListener('DOMContentLoaded', function () {
-        initPreviousVoteState();
-        fetchVoteCounts();
+        initPreviousVoteState();   // আগের ভোট থাকলে দেখাও
+        fetchVoteCounts();         // লাইভ কাউন্ট লোড
+        setupVoteButtons();        // বাটনে ইভেন্ট লাগাও
+        setupFingerprintPopup();   // ফিঙ্গারপ্রিন্ট popup ইভেন্ট
     });
     </script>
 </body>
 </html>
+
